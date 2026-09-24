@@ -1,0 +1,14 @@
+# Backend dependencies (managed Python 3.13)
+Flask==2.3.*
+Werkzeug==2.3.*
+Jinja2==3.1.*
+Flask-SQLAlchemy==3.1.*
+pymysql==1.1.*
+# pandas 2.2.x is required for Python 3.13 wheels (2.1.x fails to build numpy on 3.13)
+pandas==2.2.*
+openpyxl==3.1.*
+qrcode==7.4.*
+SQLAlchemy==2.0.*
+APScheduler==3.10.*
+python-dotenv==1.0.*
+requests==2.31.*
