@@ -8,7 +8,8 @@ is reused.
 """
 from config import Config
 from backend.sync.import_excel import B_MAP
-from backend.util.helpers import is_empty, norm, parse_date, to_float, to_site_id
+from backend.util.helpers import is_empty, norm, parse_date, to_float
+from backend.sync.import_excel import to_site_id
 
 
 def _convert(field, value):

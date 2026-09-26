@@ -34,7 +34,7 @@ MYSQL_TABLE = "site_info_pro"
 ADMIN_TOKEN = ""         # required for management APIs; set a strong token
 SCAN_SECRET"***"
 SCAN_TOKEN_TTL = 86400   # 24h
-BASE_URL = "http://192.168.1.105:8173"
+BASE_URL = "http://localhost:8173"
 
 # Warn rules
 WARN_LEAD_DAYS = 7

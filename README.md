@@ -65,7 +65,7 @@ python serve.py
 # 开发：前端热更新（Vite 代理 /api → :8173）
 cd frontend && npm run dev   # 另一个终端运行 python serve.py
 ```
-访问 `http://192.168.1.105:8173/`（内网）或 `http://localhost:8173/`。
+访问 `http://localhost:8173/`（内网）或 `http://localhost:8173/`。
 
 ### 4. 构建前端
 ```bash
@@ -74,7 +74,7 @@ cd frontend && npm run build   # 产物 frontend/dist 由 Flask 生产托管
 
 ## 部署 / 安全
 
-- **端口 8173**（内网 `192.168.1.105:8173`），`BASE_URL` 用于生成扫码 URL。
+- **端口 8173**（内网 `localhost:8173`），`BASE_URL` 用于生成扫码 URL。
 - **公网穿透（natapp）**：仅将 `/scan` 与只读看板（`/`、`/board`、`/expense`、`/pending`、`/cancel`）映射到公网；
   **管理接口**（`/api/import`、`/api/admin/*`、二维码生成）**不**经穿透暴露，且需 `ADMIN_TOKEN` 校验。
 - **双轨 token**：扫码 token = `HMAC(SCAN_SECRET, site_id:exp)`，限时默认 24h；管理 token = `ADMIN_TOKEN`。

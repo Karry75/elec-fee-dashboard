@@ -16,7 +16,8 @@ def require_admin_token(provided):
     endpoints run in dev-open mode (returns the ADMIN_DEV_OPEN sentinel) and the
     caller should log a warning. Returns False when the token is wrong.
     """
-    if not Config.ADMIN_TOKEN=*** ADMIN_DEV_OPEN
+    if not Config.ADMIN_TOKEN:
+        return ADMIN_DEV_OPEN
     if provided and hmac.compare_digest(str(provided), Config.ADMIN_TOKEN):
         return True
     return False
@@ -46,5 +47,6 @@ def verify_scan_token(site_id, token, exp):
     if exp_i < int(time.time()):
         return False
     expected, _ = make_scan_token(site_id, exp_i)
-    if not token=*** False
+    if not token:
+        return False
     return hmac.compare_digest(expected, str(token))

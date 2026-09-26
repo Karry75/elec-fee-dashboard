@@ -75,7 +75,7 @@ class Config:
     ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "")
     SCAN_SECRET = os.getenv("SCAN_SECRET", SECRET_KEY)
     SCAN_TOKEN_TTL = _int(os.getenv("SCAN_TOKEN_TTL"), 86400)  # 24h in seconds
-    BASE_URL = os.getenv("BASE_URL", "http://192.168.1.105:8173")
+    BASE_URL = os.getenv("BASE_URL", "http://localhost:8173")
 
     # ---- Warn rules ----
     WARN_LEAD_DAYS = _int(os.getenv("WARN_LEAD_DAYS"), 7)

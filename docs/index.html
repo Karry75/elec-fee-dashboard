@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>电费管理系统</title>
+    <script type="module" crossorigin src="./assets/index-DSnQL5QA.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-G1fHhfQ8.css">
+  <div id="ro-banner" style="position:fixed;right:14px;bottom:12px;z-index:9999;background:#0f62fe;color:#fff;
+padding:6px 12px;border-radius:14px;font:12px/1.5 'Microsoft YaHei',sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.18)">
+静态快照 · 只读 · 数据已脱敏</div>
+<script>
+(function(){
+  var BASE = location.pathname.replace(/[^/]*$/, '');
+  try{
+    ['pushState','replaceState'].forEach(function(fn){
+      var orig = history[fn];
+      history[fn] = function(s, t, u){
+        try{
+          if(typeof u === 'string' && u.charAt(0) === '/' && BASE && BASE !== '/' && u.indexOf(BASE) !== 0){
+            u = BASE.replace(/\/$/, '') + u;
+          }
+        }catch(e){}
+        return orig.call(history, s, t, u);
+      };
+    });
+  }catch(e){}
+
+  var _fetch = window.fetch ? window.fetch.bind(window) : null;
+  var cache = {};
+  function load(url){
+    if(!cache[url]){
+      cache[url] = _fetch(url).then(function(r){ return r.ok ? r.json() : null; }).catch(function(){ return null; });
+    }
+    return cache[url];
+  }
+  var MAP = {
+    '/api/dashboard': 'data/dashboard.json',
+    '/api/board': 'data/board.json',
+    '/api/expense': 'data/expense.json',
+    '/api/pending': 'data/pending.json',
+    '/api/cancel': 'data/cancel.json',
+    '/api/merchant/list': 'data/merchant_list.json'
+  };
+  function parse(u){
+    var s = String(u === undefined || u === null ? '' : u);
+    var i = s.indexOf('api/');
+    if(i < 0) return null;
+    var p = s.slice(i + 3);
+    var q = p.indexOf('?');
+    if(q >= 0) p = p.slice(0, q);
+    return '/' + p;
+  }
+  function respond(u){
+    var p = parse(u);
+    if(!p) return null;
+    if(MAP[p]) return load(MAP[p]);
+    var m = p.match(/^\/api\/board\/(.+)$/);
+    if(m){
+      var sid = decodeURIComponent(m[1]);
+      return load('data/board.json').then(function(d){
+        var rows = (d && d.data && d.data.rows) || [];
+        var st = null;
+        for(var i = 0; i < rows.length; i++){
+          if(String(rows[i].site_id) === sid){ st = rows[i]; break; }
+        }
+        return {ok: true, message: 'ok', data: {station: st, merchant_profiles: [], warn_records: [], pending: [], cancel: []}};
+      });
+    }
+    return Promise.resolve({ok: false, message: '静态快照为只读，该操作不可用', data: null});
+  }
+
+  var _open = XMLHttpRequest.prototype.open;
+  var _send = XMLHttpRequest.prototype.send;
+  XMLHttpRequest.prototype.open = function(method, url){
+    this.__url = url;
+    return _open.apply(this, arguments);
+  };
+  function fake(xhr, obj){
+    xhr.readyState = 4;
+    xhr.status = 200;
+    xhr.statusText = 'OK';
+    xhr.responseText = JSON.stringify(obj === null ? {} : obj);
+    try{ xhr.response = JSON.parse(xhr.responseText); }catch(e){ xhr.response = xhr.responseText; }
+    xhr.getAllResponseHeaders = function(){ return 'content-type: application/json\r\n'; };
+    xhr.getResponseHeader = function(){ return 'application/json'; };
+    if(typeof xhr.onreadystatechange === 'function') xhr.onreadystatechange();
+    if(typeof xhr.onload === 'function') xhr.onload();
+    try{ xhr.dispatchEvent(new Event('load')); xhr.dispatchEvent(new Event('loadend')); }catch(e){}
+  }
+  XMLHttpRequest.prototype.send = function(body){
+    var self = this;
+    var p = respond(this.__url);
+    if(!p) return _send.apply(this, arguments);
+    p.then(function(obj){ fake(self, obj); });
+  };
+
+  if(_fetch){
+    window.fetch = function(input, init){
+      var u = (typeof input === 'string') ? input : (input && input.url);
+      var p = respond(u);
+      if(!p) return _fetch.apply(window, arguments);
+      return p.then(function(d){
+        return new Response(JSON.stringify(d === null ? {} : d),
+          {status: 200, headers: {'Content-Type': 'application/json; charset=utf-8'}});
+      });
+    };
+  }
+})();
+</script>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
