@@ -1,5 +1,18 @@
 # 电费管理系统 (Electricity Fee Management System)
 
+## 在线访问
+
+- 本站看板（在线）：https://karry75.github.io/elec-fee-dashboard/
+- 全部看板作品集（导航页）：https://karry75.github.io/dashboard-portal/
+
+## 技术速览
+
+- **形态**：单文件静态看板（HTML + JavaScript + ECharts），数据以离线快照形式随页面加载，纯前端渲染、无后端依赖。
+- **原理**：业务库（阿里云 AnalyticDB）→ Python 抽取/构建管线 → 脱敏聚合快照 → 静态页面；页面打开即渲染，支持按维度筛选与下钻。
+- **用途**：电费管理系统看板：站点电费与用电流水分析。
+- **脱敏**：公开发布版本已移除数据库连接信息、账号口令与个人敏感字段，仅保留聚合指标。
+
+
 打通「电费结算登记表 (Excel A)」与「电费情况总库 (Excel B / mysql-dudu)」的数据割裂，建立统一网点/商户电费结算管理中心：**结算状态可视、下次结算提前预警、扫码采集一体化**。
 
 技术栈：**React 18 + Vite（前端 SPA）** + **Flask 2.3（后端 API + 生产托管）** + **SQLite（本地快照）**。
